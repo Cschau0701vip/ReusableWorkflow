@@ -26,6 +26,7 @@ jobs:
           image_tag: $GITHUB_RUN_NUMBER # optional
           
   test:
+    needs: [build]
     runs-on: ubuntu-latest
     
     steps:
@@ -49,6 +50,6 @@ jobs:
     
       - name: Run Docker Container from Image
         run: |
-          service docker start
-          docker pull ${{ secrets.REGISTRY_USERNAME }}/${{ vars.IMAGE_NAME }}:$GITHUB_RUN_NUMBER
-          docker run ${{ secrets.REGISTRY_USERNAME }}/${{ vars.IMAGE_NAME }}:$GITHUB_RUN_NUMBER
+          sudo service docker start
+          sudo docker pull ${{ secrets.REGISTRY_USERNAME }}/${{ vars.IMAGE_NAME }}:$GITHUB_RUN_NUMBER
+          sudo docker run ${{ secrets.REGISTRY_USERNAME }}/${{ vars.IMAGE_NAME }}:$GITHUB_RUN_NUMBER
