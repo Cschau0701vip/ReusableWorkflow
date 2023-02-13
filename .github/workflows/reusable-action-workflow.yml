@@ -1,7 +1,8 @@
 name: "Reusable Workflow using Composite Action"
 
 on:
-  [push]
+  #[push]
+  workflow_dispatch:
 
 jobs:
   build:
