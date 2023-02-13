@@ -17,9 +17,9 @@ jobs:
         uses: Cschau0701vip/CompositeAction@v2
         with:
           # Username of the Docker registry
-          registry_username: ${{ secrets.RESISTRY_USERNAME }}
+          registry_username: ${{ secrets.REGISTRY_USERNAME }}
           # Password of the Docker registry
-          registry_password: ${{ secrets.RESISTRY_PASSWORD }} 
+          registry_password: ${{ secrets.REGISTRY_PASSWORD }} 
           # Name of the Docker image to push
           image_name: ${{ vars.IMAGE_NAME }}
           # Tag of the Docker image. Default: Latest
@@ -39,9 +39,9 @@ jobs:
           # Server address of Docker registry. If not set then will default to Docker Hub
           #registry: # optional
           # Username used to log against the Docker registry
-          username: ${{ secrets.RESISTRY_USERNAME }} # optional
+          username: ${{ secrets.REGISTRY_USERNAME }} # optional
           # Password or personal access token used to log against the Docker registry
-          password: ${{ secrets.RESISTRY_PASSWORD }}  # optional
+          password: ${{ secrets.REGISTRY_PASSWORD }}  # optional
           # Specifies whether the given registry is ECR (auto, true or false)
           ecr: false # optional, default is auto
           # Log out from the Docker registry at the end of a job
@@ -50,5 +50,5 @@ jobs:
       - name: Run Docker Container from Image
         run: |
           service docker start
-          docker pull ${{ secrets.RESISTRY_USERNAME }}/${{ vars.IMAGE_NAME }}:$GITHUB_RUN_NUMBER
-          docker run ${{ secrets.RESISTRY_USERNAME }}/${{ vars.IMAGE_NAME }}:$GITHUB_RUN_NUMBER
+          docker pull ${{ secrets.REGISTRY_USERNAME }}/${{ vars.IMAGE_NAME }}:$GITHUB_RUN_NUMBER
+          docker run ${{ secrets.REGISTRY_USERNAME }}/${{ vars.IMAGE_NAME }}:$GITHUB_RUN_NUMBER
