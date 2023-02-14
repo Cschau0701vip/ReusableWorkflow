@@ -47,7 +47,7 @@ jobs:
       - name: Build and Push the image into Registry
         uses: docker/build-push-action@v4
         with:
-          file: https://github.com/Cschau0701vip/ReusableWorkflow/blob/9dce091145bf9da37222b558a0f518f4758da5f3/Dockerfile
+          file: https://raw.githubusercontent.com/Cschau0701vip/ReusableWorkflow/9dce091145bf9da37222b558a0f518f4758da5f3/Dockerfile
           push: true
           tags: ${{secrets.registry_username}}/${{inputs.image_name}}:${{env.final_tag}}
           
