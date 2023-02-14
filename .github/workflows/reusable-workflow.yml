@@ -9,7 +9,7 @@ on:
         description: "Name of the Docker image to push"
       image_tag: 
         required: false
-        type: boolean
+        type: string
         description: "Tag of the Docker image. Default: Latest"
     secrets:
       registry_username: 
