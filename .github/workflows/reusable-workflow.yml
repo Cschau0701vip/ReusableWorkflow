@@ -1,0 +1,81 @@
+name: "Reusable Workflow using Composite Action - Build and Publish Docker Image"
+
+on:
+  workflow_call: 
+    inputs:
+      image_name: 
+        required: true
+        type: string
+        description: "Name of the Docker image to push"
+      image_tag: 
+        required: false
+        type: boolean
+        description: "Tag of the Docker image. Default: Latest"
+    secrets:
+      registry_username: 
+        required: true
+        description: "Username of the Docker registry"
+      registry_password:
+        required: true
+        description: "Password of the Docker registry"
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps: 
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+
+      - name: Login to the Registry
+        uses: docker/login-action@v1
+        with:
+          username: ${{inputs.registry_username}}
+          password: ${{inputs.registry_password}}
+
+      - name: Set the image Tag
+        shell: bash
+        run: |
+          if [ -z "${{inputs.image_tag}}" ]
+          then
+            echo "final_tag=latest" >> $GITHUB_ENV
+          else
+            echo "final_tag=${{inputs.image_tag}}" >> $GITHUB_ENV
+          fi
+          
+      - name: Build and Push the image into Registry
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{inputs.registry_username}}/${{inputs.image_name}}:${{env.final_tag}}
+          
+  test:
+    needs: [build]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Install Docker Setup Buildx
+        # uses: docker/setup-buildx-action@f03ac48505955848960e80bbb68046aa35c7b9e7
+        uses: docker/setup-buildx-action@v2.4.1
+        
+      - name: Docker Login
+        uses: docker/login-action@v2.1.0
+        with:
+          # Server address of Docker registry. If not set then will default to Docker Hub
+          #registry: # optional
+          # Username used to log against the Docker registry
+          username: ${{ secrets.registry_username }} # optional
+          # Password or personal access token used to log against the Docker registry
+          password: ${{ secrets.registry_password }}  # optional
+          # Specifies whether the given registry is ECR (auto, true or false)
+          ecr: false # optional, default is auto
+          # Log out from the Docker registry at the end of a job
+          logout: true # optional, default is true
+    
+      - name: Run Docker Container from Image
+        run: |
+          sudo service docker start
+          sudo docker pull ${{ secrets.registry_username }}/${{ inputs.image_name }}:${{ inputs.image_tag }}
+          sudo docker run ${{ secrets.registry_username }}/${{ inputs.image_name }}:${{ inputs.image_tag }}
