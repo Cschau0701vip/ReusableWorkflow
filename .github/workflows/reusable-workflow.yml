@@ -31,8 +31,8 @@ jobs:
       - name: Login to the Registry
         uses: docker/login-action@v1
         with:
-          username: ${{inputs.registry_username}}
-          password: ${{inputs.registry_password}}
+          username: ${{secrets.registry_username}}
+          password: ${{secrets.registry_password}}
 
       - name: Set the image Tag
         shell: bash
@@ -49,7 +49,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{inputs.registry_username}}/${{inputs.image_name}}:${{env.final_tag}}
+          tags: ${{secrets.registry_username}}/${{inputs.image_name}}:${{env.final_tag}}
           
   test:
     needs: [build]
