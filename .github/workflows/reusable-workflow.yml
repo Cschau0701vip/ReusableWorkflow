@@ -3,6 +3,10 @@ name: "Reusable Workflow using Composite Action - Build and Publish Docker Image
 on:
   workflow_call: 
     inputs:
+      file:
+        required: true
+        type: string
+        description: "File path of the Docker file"
       image_name: 
         required: true
         type: string
@@ -47,7 +51,7 @@ jobs:
       - name: Build and Push the image into Registry
         uses: docker/build-push-action@v4
         with:
-          file: https://raw.githubusercontent.com/Cschau0701vip/ReusableWorkflow/9dce091145bf9da37222b558a0f518f4758da5f3/Dockerfile
+          file: ${{ inputs.file }} #https://raw.githubusercontent.com/Cschau0701vip/ReusableWorkflow/9dce091145bf9da37222b558a0f518f4758da5f3/Dockerfile
           push: true
           tags: ${{secrets.registry_username}}/${{inputs.image_name}}:${{env.final_tag}}
           
